@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1a0a0f">
+<title>Forever Yours, My Love 💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Dancing+Script:wght@400;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #c8365a;
+    --blush: #f7b8c4;
+    --deep: #1a0a0f;
+    --cream: #fff4f6;
+    --gold: #d4a853;
+    --petal: #f9dde3;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--deep);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    overflow-x: hidden;
+    /* No cursor:none on mobile — it breaks touch */
+  }
+
+  /* Hide cursor elements on touch devices */
+  @media (hover: none) {
+    .cursor, .cursor-dot { display: none; }
+  }
+  .cursor {
+    width: 20px; height: 20px;
+    border: 2px solid var(--rose);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-dot {
+    width: 6px; height: 6px;
+    background: var(--rose);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+  }
+  @media (hover: hover) { body { cursor: none; } }
+
+  /* ── Petals ── */
+  .petals-container {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 1; overflow: hidden;
+  }
+  .petal {
+    position: absolute; top: -40px;
+    font-size: 1rem; opacity: 0.7;
+    animation: fall linear infinite;
+    will-change: transform;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(-40px) rotate(0deg)   translateX(0);    opacity: 0.8; }
+    50%  { transform: translateY(50vh)  rotate(180deg) translateX(20px);  opacity: 0.6; }
+    100% { transform: translateY(105vh) rotate(360deg) translateX(-15px); opacity: 0;   }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100svh; /* safe-area aware */
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; text-align: center;
+    padding: 5rem 1.5rem 6rem;
+    background: radial-gradient(ellipse at center, #3d0a1a 0%, #1a0a0f 70%);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 20% 80%, rgba(200,54,90,0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(212,168,83,0.08) 0%, transparent 50%);
+  }
+  .hearts-bg {
+    position: absolute; inset: 0;
+    display: flex; flex-wrap: wrap; align-content: flex-start;
+    opacity: 0.04; font-size: 1.6rem; overflow: hidden; pointer-events: none;
+  }
+  .hero-tag {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(0.85rem, 3.5vw, 1.2rem);
+    color: var(--gold); letter-spacing: 0.25em;
+    text-transform: uppercase; margin-bottom: 1.2rem;
+    opacity: 0; animation: fadeUp 1s ease 0.3s forwards;
+  }
+  .hero-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(3rem, 14vw, 8rem);
+    line-height: 1.05; font-weight: 700;
+    background: linear-gradient(135deg, #f7b8c4 0%, #c8365a 40%, #d4a853 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 0.8rem;
+    opacity: 0; animation: fadeUp 1s ease 0.6s forwards;
+  }
+  .hero-heart {
+    font-size: clamp(2.8rem, 12vw, 6rem); display: block; margin: 1rem 0;
+    opacity: 0; animation: fadeUp 1s ease 1s forwards, pulse 2s ease-in-out 2.2s infinite;
+  }
+  .hero-subtitle {
+    font-style: italic;
+    font-size: clamp(1.05rem, 4vw, 1.6rem);
+    color: var(--blush); max-width: 480px; line-height: 1.75;
+    opacity: 0; animation: fadeUp 1s ease 1.2s forwards;
+  }
+  .scroll-hint {
+    position: absolute; bottom: 1.8rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+    opacity: 0; animation: fadeUp 1s ease 2s forwards;
+    color: var(--blush); font-size: 0.75rem; letter-spacing: 0.2em;
+    font-family: 'Dancing Script', cursive;
+  }
+  .scroll-arrow {
+    width: 20px; height: 20px;
+    border-right: 2px solid var(--rose); border-bottom: 2px solid var(--rose);
+    transform: rotate(45deg); animation: bounce 1.5s ease infinite;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.1); }
+  }
+  @keyframes bounce {
+    0%, 100% { transform: rotate(45deg) translateY(0); }
+    50%       { transform: rotate(45deg) translateY(5px); }
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    position: relative; z-index: 2;
+    padding: 3.5rem 1.2rem;
+  }
+  .section-inner { max-width: 860px; margin: 0 auto; }
+  .section-label {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(0.8rem, 3vw, 1rem);
+    color: var(--gold); letter-spacing: 0.35em;
+    text-transform: uppercase; margin-bottom: 0.75rem;
+    text-align: center; display: block;
+  }
+  .section-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2rem, 8vw, 4.2rem);
+    text-align: center; color: var(--blush);
+    margin-bottom: 2rem; line-height: 1.2;
+  }
+  .divider {
+    text-align: center; font-size: 1.5rem;
+    margin: 1.5rem 0; opacity: 0.5; letter-spacing: 0.8rem;
+  }
+
+  /* ── GIF GRID ──
+     On mobile: 1 column. Tablet+: 2-3 cols.
+     Each card has a slot for your own GIF — just replace the src.
+  */
+  .gif-grid {
+    display: grid;
+    grid-template-columns: 1fr;          /* mobile: 1 col */
+    gap: 1.1rem; margin-bottom: 2rem;
+  }
+  @media (min-width: 520px) {
+    .gif-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 780px) {
+    .gif-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .gif-card {
+    border-radius: 18px; overflow: hidden;
+    border: 1px solid rgba(200,54,90,0.25);
+    box-shadow: 0 6px 30px rgba(200,54,90,0.15);
+    background: rgba(255,255,255,0.03);
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease;
+  }
+  .gif-card.visible { opacity: 1; transform: translateY(0); }
+  @media (hover: hover) {
+    .gif-card:hover {
+      box-shadow: 0 14px 50px rgba(200,54,90,0.35);
+      transform: translateY(-5px) scale(1.02);
+    }
+  }
+
+  /* ── GIF IMAGE SLOT ──
+     aspect-ratio keeps cards proportional on every screen.
+     object-fit: cover fills the box without stretching.
+     Replace the src with your own GIF path or URL.
+  */
+  .gif-slot {
+    width: 100%;
+    aspect-ratio: 4 / 3;   /* comfortable shape for most GIFs */
+    object-fit: cover;
+    display: block;
+    background: rgba(200,54,90,0.07); /* placeholder bg while loading */
+  }
+
+  /* Placeholder shown when src is empty or broken */
+  .gif-slot[src=""] , .gif-slot:not([src]) {
+    min-height: 180px;
+  }
+  .gif-slot::before { content: '🌹'; }
+
+  .gif-caption {
+    padding: 0.85rem 1rem;
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1rem, 3.5vw, 1.15rem);
+    color: var(--blush); text-align: center;
+  }
+
+  /* ── MESSAGE ── */
+  .message-section {
+    background: linear-gradient(160deg, rgba(200,54,90,0.08) 0%, rgba(26,10,15,0) 60%);
+    border-top: 1px solid rgba(200,54,90,0.12);
+    border-bottom: 1px solid rgba(200,54,90,0.12);
+  }
+  .message-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(212,168,83,0.2);
+    border-radius: 20px;
+    padding: clamp(1.8rem, 6vw, 3.5rem);
+    max-width: 680px; margin: 0 auto;
+    position: relative; backdrop-filter: blur(10px);
+  }
+  .message-card::before {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 8rem; color: var(--rose); opacity: 0.1;
+    position: absolute; top: -1.5rem; left: 1.2rem; line-height: 1;
+  }
+  .message-text {
+    font-size: clamp(1rem, 3.5vw, 1.35rem);
+    line-height: 2; color: var(--cream);
+    font-style: italic; text-align: center; position: relative; z-index: 1;
+  }
+  .message-text strong { color: var(--blush); font-style: normal; font-weight: 400; }
+  .message-signature {
+    text-align: right; margin-top: 1.5rem;
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.3rem, 4.5vw, 1.6rem);
+    color: var(--gold);
+  }
+
+  /* ── PROMISES ── */
+  .promise-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);   /* 2 cols on all phones */
+    gap: 1rem; margin-top: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .promise-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .promise-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(200,54,90,0.2);
+    border-radius: 16px;
+    padding: 1.4rem 1rem;
+    text-align: center;
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 0.6s ease, transform 0.6s ease, background 0.3s;
+  }
+  .promise-card.visible { opacity: 1; transform: translateY(0); }
+  @media (hover: hover) {
+    .promise-card:hover { background: rgba(200,54,90,0.08); transform: translateY(-4px); }
+  }
+  .promise-icon { font-size: 2rem; margin-bottom: 0.6rem; display: block; }
+  .promise-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(0.95rem, 3vw, 1.15rem);
+    color: var(--blush); line-height: 1.5;
+  }
+
+  /* ── FINAL ── */
+  .final-section {
+    text-align: center; padding: 5rem 1.5rem;
+    position: relative;
+    background: radial-gradient(ellipse at center, #3d0a1a 0%, #1a0a0f 80%);
+    overflow: hidden;
+  }
+  .final-heart-ring {
+    font-size: clamp(3rem, 12vw, 5rem);
+    display: block; margin: 0 auto 1.2rem;
+    animation: spin-slow 8s linear infinite;
+  }
+  @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .final-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2.5rem, 12vw, 6rem);
+    background: linear-gradient(135deg, #f7b8c4, #d4a853);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 1.2rem;
+  }
+  .final-sub {
+    font-style: italic;
+    font-size: clamp(1rem, 3.5vw, 1.35rem);
+    color: var(--blush); max-width: 440px; margin: 0 auto; line-height: 1.8;
+  }
+  .sparkles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .sparkle {
+    position: absolute; font-size: 1.3rem;
+    animation: sparkle-float 4s ease-in-out infinite; opacity: 0;
+  }
+  @keyframes sparkle-float {
+    0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+    30%  { opacity: 1; }
+    70%  { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-50px) scale(1.2); }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 1.8rem 1rem;
+    border-top: 1px solid rgba(200,54,90,0.15);
+    font-family: 'Dancing Script', cursive;
+    color: rgba(247,184,196,0.4); font-size: 0.9rem;
+  }
+
+  /* ── FADE-UP UTIL ── */
+  .fade-up {
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── SAFE AREA (iPhone notch etc.) ── */
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    footer { padding-bottom: calc(1.8rem + env(safe-area-inset-bottom)); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cursor (desktop only) -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- Floating petals -->
+<div class="petals-container" id="petals"></div>
+
+<!-- ════════════════════════════ HERO ════════════════════════════ -->
+<section class="hero">
+  <div class="hearts-bg" id="heartsBg"></div>
+  <span class="hero-tag">✦ A love letter for you ✦</span>
+  <h1 class="hero-title">My Wifey,<br>My World 💕</h1>
+  <span class="hero-heart">💗</span>
+  <p class="hero-subtitle">
+    I love you so much, my wifey.<br>
+    No matter what happens between us —<br>
+    <em>I love you, always.</em>
+  </p>
+  <div class="scroll-hint">
+    <span>scroll down</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ════════════════════════ GIF SECTION 1 ════════════════════════
+     HOW TO ADD YOUR OWN GIFs:
+       • Replace the src="" value with:
+           – a local file:   src="mygif.gif"
+           – a URL:          src="https://..."
+       • Edit the caption text inside .gif-caption
+       • Add/remove <div class="gif-card"> blocks freely
+     The grid auto-adjusts: 1 col on phones, 2 on tablets, 3 on desktop.
+═══════════════════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="section-inner">
+    <span class="section-label">💋 sealed with a kiss</span>
+    <h2 class="section-title">Every Kiss With You<br>Feels Like the First (Although we didnt have our first kiss yet)</h2>
+
+    <div class="gif-grid">
+
+      <!-- GIF 1 — replace src with your gif -->
+      <div class="gif-card">
+        <img class="gif-slot" src="./kiss1.gif" alt="Romantic kiss" loading="lazy">
+        <div class="gif-caption">Forever kissing you 💋</div>
+      </div>
+
+      <!-- GIF 2 — replace src with your gif -->
+      <div class="gif-card">
+        <img class="gif-slot" src="./kiss2.gif" alt="Love hearts" loading="lazy">
+        <div class="gif-caption">My heart beats for you 💓</div>
+      </div>
+
+      <!-- GIF 3 — replace src with your gif -->
+      <div class="gif-card">
+        <img class="gif-slot" src="./kiss3.gif" alt="Always together" loading="lazy">
+        <div class="gif-caption">Always & forever 🌹</div>
+      </div>
+
+    </div><!-- /gif-grid -->
+    <div class="divider">💕 ✦ 💕</div>
+  </div>
+</section>
+
+<!-- ════════════════════════ MESSAGE ════════════════════════ -->
+<section class="section message-section">
+  <div class="section-inner">
+    <span class="section-label fade-up">💌 from my heart</span>
+    <div class="message-card fade-up" style="transition-delay:0.2s">
+      <p class="message-text">
+        My dearest wifey,<br><br>
+        You are the <strong>sunrise</strong> that makes every morning worth waking up for,
+        the <strong>warmth</strong> that stays with me through every storm.
+        No words will ever fully capture what you mean to me —
+        but I want you to know that no matter where life takes us,
+        no matter what rough waters we sail through,
+        my love for you will <strong>never waver</strong>.<br><br>
+        You are my home. My safe place. My greatest adventure.<br>
+        I choose you <strong>today</strong>, tomorrow, and every day after.
+        <strong>Always.</strong>
+      </p>
+      <div class="message-signature">— Your Tanish(Tani Baby), forever & always 💍</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════ GIF SECTION 2 ════════════════════════ -->
+<section class="section">
+  <div class="section-inner">
+    <span class="section-label">🤗 wrapped in love</span>
+    <h2 class="section-title">I Just Want to Hold<br>You Close, Always</h2>
+
+    <div class="gif-grid">
+
+      <!-- GIF 4 — replace src with your gif -->
+      <div class="gif-card">
+        <img class="gif-slot" src="./hug1.gif" alt="Hug" loading="lazy">
+        <div class="gif-caption">Never letting you go 🫂</div>
+      </div>
+
+      <!-- GIF 5 — replace src with your gif -->
+      <div class="gif-card">
+        <img class="gif-slot" src="./hug2.gif" alt="Romantic hug" loading="lazy">
+        <div class="gif-caption">Safe in your arms 💑</div>
+      </div>
+
+      <!-- GIF 6 — replace src with your gif -->
+      <div class="gif-card">
+        <img class="gif-slot" src="./hug3.gif" alt="Love forever" loading="lazy">
+        <div class="gif-caption">You & me, forever 🌸</div>
+      </div>
+
+    </div><!-- /gif-grid -->
+  </div>
+</section>
+
+<!-- ════════════════════════ PROMISES ════════════════════════ -->
+<section class="section">
+  <div class="section-inner">
+    <span class="section-label fade-up">🌹 my promises to you</span>
+    <h2 class="section-title fade-up" style="transition-delay:0.15s">What I Vow to You,<br>Each and Every Day</h2>
+    <div class="promise-grid">
+      <div class="promise-card"><span class="promise-icon">💞</span><p class="promise-text">To love you through every season, no matter what</p></div>
+      <div class="promise-card" style="transition-delay:0.1s"><span class="promise-icon">🌹</span><p class="promise-text">To always come back to you, no matter the distance</p></div>
+      <div class="promise-card" style="transition-delay:0.2s"><span class="promise-icon">🤝</span><p class="promise-text">To be your partner, your strength, your safe harbour</p></div>
+      <div class="promise-card" style="transition-delay:0.3s"><span class="promise-icon">✨</span><p class="promise-text">To make you feel cherished in the small moments</p></div>
+      <div class="promise-card" style="transition-delay:0.4s"><span class="promise-icon">💍</span><p class="promise-text">To choose you, every single day, for the rest of my life</p></div>
+      <div class="promise-card" style="transition-delay:0.5s"><span class="promise-icon">🕊️</span><p class="promise-text">To grow with you and never stop showing you how much you matter</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════ FINAL ════════════════════════ -->
+<section class="final-section">
+  <div class="sparkles" id="sparkles"></div>
+  <span class="final-heart-ring">💖</span>
+  <h2 class="final-title">I Love You,<br>My Wifey</h2>
+  <p class="final-sub">
+    No matter what happens between us —<br>
+    <em>my love for you has no expiry date.</em><br>
+    You are, and always will be, the love of my life. 💕
+  </p>
+</section>
+
+<footer>Made with every piece of my heart, just for you 💌</footer>
+
+<script>
+  /* ── Desktop cursor ── */
+  const cursor = document.getElementById('cursor');
+  const dot    = document.getElementById('cursorDot');
+  if (window.matchMedia('(hover: hover)').matches) {
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+      dot.style.left    = e.clientX + 'px'; dot.style.top    = e.clientY + 'px';
+    });
+  }
+
+  /* ── Hearts wallpaper ── */
+  const heartsBg  = document.getElementById('heartsBg');
+  const heartsArr = ['❤️','💕','💗','💖','💓','🌹','💋','✨','💞','🌸'];
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('span');
+    s.textContent = heartsArr[i % heartsArr.length];
+    s.style.cssText = `font-size:${1+Math.random()*1}rem;opacity:${0.3+Math.random()*0.5};margin:${3+Math.random()*6}px;`;
+    heartsBg.appendChild(s);
+  }
+
+  /* ── Falling petals (fewer on mobile for perf) ── */
+  const isMobile      = window.innerWidth < 600;
+  const petalsArr     = ['🌸','🌺','🌷','✿','❀','🌹'];
+  const petalsCont    = document.getElementById('petals');
+  function spawnPetal() {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = petalsArr[Math.floor(Math.random() * petalsArr.length)];
+    p.style.left = Math.random() * 100 + 'vw';
+    const dur = 7 + Math.random() * 7;
+    p.style.animationDuration = dur + 's';
+    p.style.animationDelay   = Math.random() * 3 + 's';
+    p.style.fontSize = (0.7 + Math.random() * 0.8) + 'rem';
+    petalsCont.appendChild(p);
+    setTimeout(() => p.remove(), (dur + 3) * 1000);
+  }
+  const initialPetals = isMobile ? 8 : 16;
+  for (let i = 0; i < initialPetals; i++) spawnPetal();
+  setInterval(spawnPetal, isMobile ? 1200 : 700);
+
+  /* ── Sparkles ── */
+  const sparkCont = document.getElementById('sparkles');
+  const sparkSym  = ['✨','💫','⭐','🌟','💕','💋'];
+  function spawnSparkle() {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.textContent = sparkSym[Math.floor(Math.random() * sparkSym.length)];
+    s.style.left = 5 + Math.random() * 90 + '%';
+    s.style.top  = 10 + Math.random() * 70 + '%';
+    const dur = 2.5 + Math.random() * 2;
+    s.style.animationDuration = dur + 's';
+    s.style.animationDelay   = Math.random() * 0.8 + 's';
+    sparkCont.appendChild(s);
+    setTimeout(() => s.remove(), (dur + 1) * 1000);
+  }
+  for (let i = 0; i < 8; i++) spawnSparkle();
+  setInterval(spawnSparkle, 600);
+
+  /* ── Scroll-reveal ── */
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.gif-card, .promise-card, .fade-up').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
